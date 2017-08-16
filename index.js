@@ -1,11 +1,16 @@
-var fs = require('fs');
+var fs = require('fs'),
+    os = require('os');
 // var StatMode = require('stat-mode');
 // var colors = require('colors');
 
 fs.readdir('../Node-File-System','utf-8', function(err, files) {
-    fs.appendFile('./save.txt', files, 'utf-8', function (err) {
-        if (err) throw err;
-        console.log('Files names saved to save.txt');
+    fs.open('./save.txt', 'a', 666, function( e, id ) {
+        var data = files.join(os.EOL);
+        fs.write( id, data, null, 'utf8', function(){
+            fs.close(id, function(){
+                console.log('Files names saved to save.txt');
+            });
+        });
     });
 });
 
